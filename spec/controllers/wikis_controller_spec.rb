@@ -14,7 +14,7 @@ RSpec.describe WikisController, type: :controller do
       login_with nil
     end
 
-    describe "GET index" do
+    describe "GET #index" do
       it "should be redirected to signin" do
         get :index
         expect( response ).to redirect_to( new_user_session_path )
@@ -31,7 +31,7 @@ RSpec.describe WikisController, type: :controller do
     end
 
 
-    describe "GET index" do
+    describe "GET #index" do
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)
@@ -49,7 +49,7 @@ RSpec.describe WikisController, type: :controller do
     end
 
 
-    describe "GET new" do
+    describe "GET #new" do
       it "returns http success" do
         get :new
         expect(response).to have_http_status(:success)
@@ -67,7 +67,7 @@ RSpec.describe WikisController, type: :controller do
     end
 
 
-    describe "POST create" do
+    describe "POST #create" do
       it "increases the number of Wiki by 1" do
         expect{ post :create, params: { wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, user: user } } }.to change(Wiki,:count).by(1)
       end
@@ -121,6 +121,27 @@ RSpec.describe WikisController, type: :controller do
         expect(wiki_instance.id).to eq(my_wiki.id)
         expect(wiki_instance.title).to eq(my_wiki.title)
         expect(wiki_instance.body).to eq(my_wiki.body)
+      end
+    end
+
+
+
+    describe "PUT #update" do
+      it "updates wiki with expected attributes" do
+        new_title = RandomData.random_sentence
+        new_body = RandomData.random_paragraph
+        put :update, params: { id: my_wiki.id, wiki: { title: new_title, body: new_body } }
+        updated_wiki = assigns(:wiki)
+        expect(updated_wiki.id).to eq(my_wiki.id)
+        expect(updated_wiki.title).to eq(new_title)
+        expect(updated_wiki.body).to eq(new_body)
+      end
+
+      it "redirects to the updated wiki" do
+        new_title = RandomData.random_sentence
+        new_body = RandomData.random_paragraph
+        put :update, params: { id: my_wiki.id, wiki: { title: new_title, body: new_body } }
+        expect(response).to redirect_to my_wiki
       end
     end
   end
