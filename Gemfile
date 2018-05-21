@@ -45,7 +45,17 @@ gem 'devise'
 
 gem 'figaro'
 
+group :test do
+  gem 'webmock'
+end
+
 group :development, :test do
-   gem 'rspec-rails', '~> 3.0'
-   gem 'rails-controller-testing'
- end
+  gem 'rspec-rails', '~> 3.0'
+  gem 'rails-controller-testing'
+  gem 'shoulda'
+  gem 'factory_bot_rails'
+  gem 'capybara'
+  gem 'guard-rspec'
+  gem 'spring-commands-rspec'
+  gem 'vcr'
+end
