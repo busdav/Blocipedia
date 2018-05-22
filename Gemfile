@@ -45,6 +45,8 @@ gem 'devise'
 
 gem 'figaro'
 
+gem 'pundit'
+
 group :test do
   gem 'webmock'
 end
