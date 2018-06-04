@@ -16,97 +16,120 @@ RSpec.describe WikiPolicy, type: :controller do
 
 
 
-  context "standard_user" do
+  context "standard user" do
 
     permissions ".scope" do
-      it "shows public wikis" do
+      it "returns public wikis" do
         public_wiki
         expect(resolve_for(standard_user)).to eq [public_wiki]
       end
 
-      it "hides private wikis" do
+      it "does not return private wikis by other users" do
         private_wiki
         expect(resolve_for(standard_user)).to eq []
+      end
+
+      it "returns private wiki by current user" do
+        wiki = Wiki.new(user: standard_user, private: true)
+        expect(resolve_for(standard_user)).to eq [wiki]
       end
     end
 
     permissions :show? do
-      it "grants access to standard user if wiki is public" do
+      it "grants access to standard user for public wikis" do
         expect(subject).to permit(standard_user, public_wiki)
       end
 
-      # it "denies access if wiki is private" do
-      #
-      # end
+      it "denies access to standard user for private wikis by other users" do
+        expect(subject).not_to permit(standard_user, private_wiki)
+      end
+
+      it "grants access to standard user for own private wiki" do
+        wiki = Wiki.new(user: standard_user, private: true)
+        expect(subject).to permit(standard_user, wiki)
+      end
     end
 
-    permissions :create? do
-      pending "add some examples to (or delete) #{__FILE__}"
+    permissions :create?, :new? do
+      it "grants access to standard user for public wikis" do
+        expect(subject).to permit(standard_user, Wiki.new(private: false))
+      end
+
+      it "grants access to standard user for private wikis" do
+        expect(subject).to permit(standard_user, Wiki.new(private: true))
+      end
     end
 
-    permissions :update? do
-      pending "add some examples to (or delete) #{__FILE__}"
+    permissions :update?, :edit? do
+      it "grants access to standard user for public wikis" do
+        expect(subject).to permit(standard_user, public_wiki)
+      end
+
+      it "denies access to standard user for private wikis by other users" do
+        expect(subject).not_to permit(standard_user, private_wiki)
+      end
+
+      it "grants access to standard user for own private wiki" do
+        wiki = Wiki.new(user: standard_user, private: true)
+        expect(subject).to permit(standard_user, wiki)
+      end
     end
 
     permissions :destroy? do
-      pending "add some examples to (or delete) #{__FILE__}"
+      it "denies access to standard user for public wikis by other users" do
+        expect(subject).not_to permit(standard_user, public_wiki)
+      end
+
+      it "denies access to standard user for private wikis by other users" do
+        expect(subject).not_to permit(standard_user, private_wiki)
+      end
+
+      it "grants access to standard user for own public wiki" do
+        wiki = Wiki.new(user: standard_user, private: false)
+        expect(subject).to permit(standard_user, wiki)
+      end
+
+      it "grants access to standard user for own private wiki" do
+        wiki = Wiki.new(user: standard_user, private: true)
+        expect(subject).to permit(standard_user, wiki)
+      end
     end
   end
 
 
 
-  context "admin_user" do
+  context "admin user" do
+
     permissions ".scope" do
-      it "shows public wikis" do
+      it "returns public wikis" do
         public_wiki
         expect(resolve_for(admin_user)).to eq [public_wiki]
       end
 
-      it "shows private wikis" do
+      it "returns private wikis" do
         private_wiki
         expect(resolve_for(admin_user)).to eq [private_wiki]
       end
     end
 
-    permissions :show? do
-      it "grants access to standard user if wiki is public" do
-        expect(subject).to permit(standard_user, public_wiki)
+    permissions :show?, :update?, :edit?, :destroy? do
+      it "grants access to admin user for public wikis" do
+        expect(subject).to permit(admin_user, public_wiki)
       end
 
-      # it "denies access if wiki is private" do
-      #
-      # end
+      it "grants access to admin user for private wikis" do
+        expect(subject).to permit(admin_user, private_wiki)
+      end
     end
 
-    permissions :create? do
-      pending "add some examples to (or delete) #{__FILE__}"
-    end
+    permissions :create?, :new? do
+      it "grants access to admin user for public wikis" do
+        expect(subject).to permit(admin_user, Wiki.new(private: false))
+      end
 
-    permissions :update? do
-      pending "add some examples to (or delete) #{__FILE__}"
-    end
-
-    permissions :destroy? do
-      pending "add some examples to (or delete) #{__FILE__}"
+      it "grants access to admin user for private wikis" do
+        expect(subject).to permit(admin_user, Wiki.new(private: true))
+      end
     end
   end
 end
-
-
-# describe PostPolicy do
-#   subject { described_class }
-#
-#   permissions :update?, :edit? do
-#     it "denies access if post is published" do
-#       expect(subject).not_to permit(User.new(admin: false), Post.new(published: true))
-#     end
-#
-#     it "grants access if post is published and user is an admin" do
-#       expect(subject).to permit(User.new(admin: true), Post.new(published: true))
-#     end
-#
-#     it "grants access if post is unpublished" do
-#       expect(subject).to permit(User.new(admin: false), Post.new(published: false))
-#     end
-#   end
-# end
