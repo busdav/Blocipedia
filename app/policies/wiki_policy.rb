@@ -1,5 +1,9 @@
 class WikiPolicy < ApplicationPolicy
 
+  def index?
+    user.admin? || record.try(:user) == user
+  end
+
   def update?
     user.present?
   end
