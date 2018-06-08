@@ -1,15 +1,40 @@
 class WikiPolicy < ApplicationPolicy
 
   def index?
-    user.admin? || record.try(:user) == user
-  end
-
-  def update?
     user.present?
   end
 
-# probably add the same for edit, no? or, probably reference in appl policy made to 'update' is enough.
+  def show?
+    if record.private?
+      user.admin? || record.try(:user) == user
+    else
+      user.present?
+    end
+  end
 
+  def create?
+    user.present?
+  end
+
+  def new?
+    create?
+  end
+
+  def update?
+    if record.private?
+      user.admin? || record.try(:user) == user
+    else
+      user.present?
+    end
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+      user.admin? || record.try(:user) == user
+  end
 
 
   class Scope < Scope

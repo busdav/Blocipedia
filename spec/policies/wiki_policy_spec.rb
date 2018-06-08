@@ -30,7 +30,13 @@ RSpec.describe WikiPolicy, type: :controller do
       end
     end
 
-    permissions :index?, :show?, :update?, :edit?, :destroy? do
+    permissions :index? do
+      it "grants access to admin user" do
+        expect(subject).to permit(admin_user)
+      end
+    end
+
+    permissions :show?, :update?, :edit?, :destroy? do
       it "grants access to admin user for public wikis" do
         expect(subject).to permit(admin_user, public_wiki)
       end
@@ -73,17 +79,8 @@ RSpec.describe WikiPolicy, type: :controller do
     end
 
     permissions :index? do
-      it "grants access to premium user for public wikis" do
-        expect(subject).to permit(premium_user, public_wiki)
-      end
-
-      it "denies access to premium user for private wikis by other users" do
-        expect(subject).not_to permit(premium_user, private_wiki)
-      end
-
-      it "grants access to premium user for own private wiki" do
-        wiki = Wiki.create(user: premium_user, private: true)
-        expect(subject).to permit(premium_user, wiki)
+      it "grants access to premium user" do
+        expect(subject).to permit(premium_user)
       end
     end
 
@@ -168,19 +165,10 @@ RSpec.describe WikiPolicy, type: :controller do
         expect(resolve_for(standard_user)).to eq [wiki]
       end
     end
-    
+
     permissions :index? do
-      it "grants access to standard user for public wikis" do
-        expect(subject).to permit(standard_user, public_wiki)
-      end
-
-      it "denies access to standard user for private wikis by other users" do
-        expect(subject).not_to permit(standard_user, private_wiki)
-      end
-
-      it "grants access to standard user for own private wiki" do
-        wiki = Wiki.create(user: standard_user, private: true)
-        expect(subject).to permit(standard_user, wiki)
+      it "grants access to standard user" do
+        expect(subject).to permit(standard_user)
       end
     end
 

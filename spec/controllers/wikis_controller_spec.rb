@@ -4,6 +4,7 @@ RSpec.describe WikisController, type: :controller do
 
   let(:my_wiki) { create (:wiki) }
   let(:user) { create(:user) }
+  let(:admin_user) { create(:admin_user) }
 
 
 
@@ -24,7 +25,7 @@ RSpec.describe WikisController, type: :controller do
 
 
 
-  context "logged-in user" do
+  context "standard user" do
 
     before :each do
       login_with user
@@ -144,8 +145,15 @@ RSpec.describe WikisController, type: :controller do
         expect(response).to redirect_to my_wiki
       end
     end
+  end
 
 
+
+  context "admin user" do
+
+    before :each do
+      login_with admin_user
+    end
 
     describe "DELETE #destroy" do
       it "deletes the wiki" do
