@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe WikisController, type: :controller do
 
-  let(:my_wiki) { create(:wiki) }
+  let(:my_wiki) { create (:wiki) }
   let(:user) { create(:user) }
+  let(:admin_user) { create(:admin_user) }
 
 
 
@@ -24,10 +25,10 @@ RSpec.describe WikisController, type: :controller do
 
 
 
-  context "logged-in user" do
+  context "standard user" do
 
     before :each do
-      login_with create( :user )
+      login_with user
     end
 
 
@@ -39,7 +40,7 @@ RSpec.describe WikisController, type: :controller do
 
       it "renders the #index view" do
         get :index
-        expect( response ).to render_template( :index )
+        expect(response).to render_template(:index)
       end
 
       it "assigns [my_wiki] to @wikis" do
@@ -144,8 +145,15 @@ RSpec.describe WikisController, type: :controller do
         expect(response).to redirect_to my_wiki
       end
     end
+  end
 
 
+
+  context "admin user" do
+
+    before :each do
+      login_with admin_user
+    end
 
     describe "DELETE #destroy" do
       it "deletes the wiki" do

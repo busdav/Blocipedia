@@ -135,6 +135,8 @@ GEM
       method_source (~> 0.9.0)
     public_suffix (3.0.2)
     puma (3.11.3)
+    pundit (1.1.0)
+      activesupport (>= 3.0.0)
     rack (2.0.4)
     rack-test (0.8.3)
       rack (>= 1.0, < 3)
@@ -267,6 +269,7 @@ DEPENDENCIES
   listen (~> 3.0.5)
   pg (~> 0.18.4)
   puma (~> 3.0)
+  pundit
   rails (~> 5.1.2)
   rails-controller-testing
   rspec-rails (~> 3.0)

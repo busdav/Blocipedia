@@ -23,5 +23,13 @@ RSpec.describe Wiki, type: :model do
     it "has a title, body, and user attribute" do
        expect(wiki).to have_attributes(title: wiki.title, body: wiki.body, user: wiki.user)
     end
+
+    it "responds to .private?" do
+      expect(wiki).to respond_to(:private?)
+    end
+
+    it "is public by default" do
+      expect(wiki.private).to be(false)
+    end
   end
 end
