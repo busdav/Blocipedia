@@ -47,6 +47,8 @@ gem 'figaro'
 
 gem 'pundit'
 
+gem 'faker'
+
 group :test do
   gem 'webmock'
 end

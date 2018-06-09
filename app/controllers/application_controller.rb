@@ -6,8 +6,7 @@ class ApplicationController < ActionController::Base
 
   include Pundit
 
-  # Will be turning this on once authorization policies in place:
-  # after_action :verify_authorized, except: :index
+  # after_action :verify_authorized
   # after_action :verify_policy_scoped, only: :index
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
