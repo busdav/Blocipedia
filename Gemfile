@@ -49,6 +49,8 @@ gem 'pundit'
 
 gem 'faker'
 
+gem 'stripe'
+
 group :test do
   gem 'webmock'
 end
