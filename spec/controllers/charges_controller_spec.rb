@@ -4,6 +4,7 @@ RSpec.describe ChargesController, type: :controller do
 
   let(:user) { create(:user) }
   let(:admin_user) { create(:admin_user) }
+  let(:dummy_class) { Class.new { include ChangeUserRole } }
 
 
 
@@ -30,6 +31,7 @@ RSpec.describe ChargesController, type: :controller do
       login_with user
     end
 
+
     describe "GET #new" do
       it "returns http success" do
         get :new
@@ -39,6 +41,14 @@ RSpec.describe ChargesController, type: :controller do
       it "renders the #new view" do
         get :new
         expect(response).to render_template :new
+      end
+    end
+
+
+    describe "POST #create" do
+      it "upgrades the current standard user to premium" do
+        post :create
+        expect(user.role).to eq "premium"
       end
     end
   end

@@ -1,13 +1,5 @@
 class UsersController < ApplicationController
-  # def show
-  #   # @user = User.find(params[:id])
-  # end
-
-  def upgrade
-
-  end
-
-  def downgrade
-
+  def show
+    @user = current_user
   end
 end

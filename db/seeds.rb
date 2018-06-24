@@ -2,7 +2,7 @@ require 'faker'
 
 
 standard_user_first = User.create!(
-  email:    'standfirst@ex.com',
+  email:    'standfirst@example.com',
   password: 'password'
 )
 
@@ -14,19 +14,19 @@ standard_user_first = User.create!(
 end
 
 admin_user = User.create!(
-  email:    'admin@ex.com',
+  email:    'admin@example.com',
   password: 'password',
   role:     'admin'
 )
 
 premium_user = User.create!(
-  email:    'premium@ex.com',
+  email:    'premium@example.com',
   password: 'password',
   role:     'premium'
 )
 
 standard_user_last = User.create!(
-  email:    'standlast@ex.com',
+  email:    'standlast@example.com',
   password: 'password'
 )
 
