@@ -28,9 +28,11 @@ class ChargesController < ApplicationController
       currency: 'usd'
     )
 
-    flash[:notice] = "Thanks for all the money, #{current_user.email}! Feel free to pay me again."
-    upgrade
+    flash[:notice] = "You've successfully upgraded to Premium, #{current_user.email}"
+    upgrade_user
     redirect_to user_path(current_user) # or wherever
+    # flash[:notice] = "You've successfully upgraded to Premium"
+
 
     # Stripe will send back CardErrors, with friendly messages
     # when something goes wrong.
