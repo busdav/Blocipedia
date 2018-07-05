@@ -43,13 +43,5 @@ RSpec.describe ChargesController, type: :controller do
         expect(response).to render_template :new
       end
     end
-
-
-    describe "POST #create" do
-      it "upgrades the current standard user to premium" do
-        post :create
-        expect(user.role).to eq "premium"
-      end
-    end
   end
 end

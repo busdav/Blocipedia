@@ -67,14 +67,9 @@ RSpec.describe WikiPolicy, type: :controller do
         expect(resolve_for(premium_user)).to eq [public_wiki]
       end
 
-      it "does not return private wikis by other users" do
+      it "returns private wikis" do
         private_wiki
-        expect(resolve_for(premium_user)).to eq []
-      end
-
-      it "returns private wiki by current user" do
-        wiki = Wiki.create(user: premium_user, private: true)
-        expect(resolve_for(premium_user)).to eq [wiki]
+        expect(resolve_for(admin_user)).to eq [private_wiki]
       end
     end
 
@@ -89,8 +84,8 @@ RSpec.describe WikiPolicy, type: :controller do
         expect(subject).to permit(premium_user, public_wiki)
       end
 
-      it "denies access to premium user for private wikis by other users" do
-        expect(subject).not_to permit(premium_user, private_wiki)
+      it "grants access to premium user for private wikis by other users" do
+        expect(subject).to permit(premium_user, private_wiki)
       end
 
       it "grants access to premium user for own private wiki" do
@@ -114,8 +109,8 @@ RSpec.describe WikiPolicy, type: :controller do
         expect(subject).to permit(premium_user, public_wiki)
       end
 
-      it "denies access to premium user for private wikis by other users" do
-        expect(subject).not_to permit(premium_user, private_wiki)
+      it "grants access to premium user for private wikis by other users" do
+        expect(subject).to permit(premium_user, private_wiki)
       end
 
       it "grants access to premium user for own private wiki" do
@@ -192,8 +187,8 @@ RSpec.describe WikiPolicy, type: :controller do
         expect(subject).to permit(standard_user, Wiki.new(private: false))
       end
 
-      it "grants access to standard user for private wikis" do
-        expect(subject).to permit(standard_user, Wiki.new(private: true))
+      it "denies access to standard user for private wikis" do
+        expect(subject).not_to permit(standard_user, Wiki.new(private: true))
       end
     end
 
