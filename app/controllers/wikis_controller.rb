@@ -40,6 +40,7 @@ class WikisController < ApplicationController
     @wiki = policy_scope(Wiki).find(params[:id])
     @wiki.title = params[:wiki][:title]
     @wiki.body = params[:wiki][:body]
+    @wiki.private = params[:wiki][:private]
     authorize @wiki
 
     if @wiki.save
