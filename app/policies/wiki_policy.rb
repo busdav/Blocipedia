@@ -6,14 +6,19 @@ class WikiPolicy < ApplicationPolicy
 
   def show?
     if record.private?
-      user.admin? || record.try(:user) == user
+      user.admin? || user.premium? || record.try(:user) == user
     else
       user.present?
     end
   end
 
   def create?
-    user.present?
+    if record.private?
+      user.admin? || user.premium?
+    else
+      user.present?
+    end
+    # user.present?
   end
 
   def new?
@@ -22,7 +27,7 @@ class WikiPolicy < ApplicationPolicy
 
   def update?
     if record.private?
-      user.admin? || record.try(:user) == user
+      user.admin? || user.premium? || record.try(:user) == user
     else
       user.present?
     end
@@ -42,7 +47,7 @@ class WikiPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       elsif user.premium?
-        scope.where(:private => false).or(scope.where(:user => user))
+        scope.all
       elsif user.standard?
         scope.where(:private => false).or(scope.where(:user => user))
       end
