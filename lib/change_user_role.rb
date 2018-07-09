@@ -9,10 +9,8 @@ module ChangeUserRole
   def downgrade_user
     if current_user.role == "premium"
       current_user.standard!
-    end
-    @wikis = Wiki.where(:user_id => current_user.id)
-    @wikis.each do |wiki|
-      wiki.private = false
+      @wikis = Wiki.where(:user_id => current_user.id)
+      @wikis.update_all(private: false)
     end
   end
 end

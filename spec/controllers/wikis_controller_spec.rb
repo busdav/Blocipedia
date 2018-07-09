@@ -2,9 +2,12 @@ require 'rails_helper'
 
 RSpec.describe WikisController, type: :controller do
 
+  let(:dummy_class) { Class.new { include ChangeUserRole } }
   let(:my_wiki) { create (:wiki) }
+  let(:private_wiki) { create (:private_wiki) }
   let(:user) { create(:user) }
   let(:admin_user) { create(:admin_user) }
+  let(:premium_user) { create(:premium_user) }
 
 
 
@@ -22,6 +25,7 @@ RSpec.describe WikisController, type: :controller do
       end
     end
   end
+
 
 
 
@@ -85,7 +89,6 @@ RSpec.describe WikisController, type: :controller do
     end
 
 
-
     describe "GET #show" do
       it "returns http success" do
         get :show, params: { id: my_wiki.id }
@@ -102,7 +105,6 @@ RSpec.describe WikisController, type: :controller do
         expect(assigns(:wiki)).to eq(my_wiki)
       end
     end
-
 
 
     describe "GET #edit" do
@@ -126,7 +128,6 @@ RSpec.describe WikisController, type: :controller do
     end
 
 
-
     describe "PUT #update" do
       it "updates wiki with expected attributes" do
         new_title = RandomData.random_sentence
@@ -145,7 +146,17 @@ RSpec.describe WikisController, type: :controller do
         expect(response).to redirect_to my_wiki
       end
     end
+
+
+    describe "#upgrade_user" do
+      it "upgrades the user" do
+        user
+        dummy_class.upgrade_user
+        expect(user.role).to eq "premium"
+      end
+    end
   end
+
 
 
 
@@ -165,6 +176,32 @@ RSpec.describe WikisController, type: :controller do
       it "redirects to wikis index" do
         delete :destroy, params: { id: my_wiki.id }
         expect(response).to redirect_to wikis_path
+      end
+    end
+  end
+
+
+
+
+  context "premium user" do
+
+    before :each do
+      login_with premium_user
+    end
+
+
+    describe "#downgrade_user" do
+      it "downgrades the user" do
+        premium_user
+        dummy_class.downgrade_user
+        expect(premium_user.role).to eq "standard"
+      end
+
+      it "sets the user's private wikis to public" do
+        premium_user.update(role: "premium")
+        private_wiki.update(user_id: premium_user.id)
+        dummy_class.downgrade_user
+        expect(private_wiki.private).to eq "false"
       end
     end
   end
