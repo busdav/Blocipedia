@@ -51,6 +51,8 @@ gem 'faker'
 
 gem 'stripe'
 
+gem 'redcarpet'
+
 group :test do
   gem 'webmock'
 end

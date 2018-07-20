@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe WikisController, type: :controller do
 
-  let(:dummy_class) { Class.new { include ChangeUserRole } }
+  # let(:dummy_class) { Class.new { include ChangeUserRole } }
   let(:my_wiki) { create (:wiki) }
   let(:private_wiki) { create (:private_wiki) }
   let(:user) { create(:user) }
@@ -147,14 +147,14 @@ RSpec.describe WikisController, type: :controller do
       end
     end
 
-
-    describe "#upgrade_user" do
-      it "upgrades the user" do
-        user
-        dummy_class.upgrade_user
-        expect(user.role).to eq "premium"
-      end
-    end
+  #
+  #   describe "#upgrade_user" do
+  #     it "upgrades the user" do
+  #       user
+  #       dummy_class.upgrade_user
+  #       expect(user.role).to eq "premium"
+  #     end
+  #   end
   end
 
 
@@ -182,27 +182,27 @@ RSpec.describe WikisController, type: :controller do
 
 
 
+  #
+  # context "premium user" do
+  #
+  #   before :each do
+  #     login_with premium_user
+  #   end
 
-  context "premium user" do
 
-    before :each do
-      login_with premium_user
-    end
-
-
-    describe "#downgrade_user" do
-      it "downgrades the user" do
-        premium_user
-        dummy_class.downgrade_user
-        expect(premium_user.role).to eq "standard"
-      end
-
-      it "sets the user's private wikis to public" do
-        premium_user.update(role: "premium")
-        private_wiki.update(user_id: premium_user.id)
-        dummy_class.downgrade_user
-        expect(private_wiki.private).to eq "false"
-      end
-    end
-  end
+    # describe "#downgrade_user" do
+    #   it "downgrades the user" do
+    #     premium_user
+    #     dummy_class.downgrade_user
+    #     expect(premium_user.role).to eq "standard"
+    #   end
+    #
+    #   it "sets the user's private wikis to public" do
+    #     premium_user.update(role: "premium")
+    #     private_wiki.update(user_id: premium_user.id)
+    #     dummy_class.downgrade_user
+    #     expect(private_wiki.private).to eq "false"
+    #   end
+    # end
+  # end
 end

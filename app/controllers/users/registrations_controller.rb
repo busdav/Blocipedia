@@ -63,7 +63,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   def downgrade
-    downgrade_user
+    downgrade_user(current_user)
     flash[:notice] = "You've successfully downgraded to Standard, #{current_user.email}"
     redirect_to user_path(current_user)
   end
