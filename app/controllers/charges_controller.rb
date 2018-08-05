@@ -29,7 +29,7 @@ class ChargesController < ApplicationController
     )
 
     flash[:notice] = "You've successfully upgraded to Premium, #{current_user.email}"
-    upgrade_user
+    upgrade_user(current_user)
     redirect_to user_path(current_user) # or wherever
     # flash[:notice] = "You've successfully upgraded to Premium"
 
