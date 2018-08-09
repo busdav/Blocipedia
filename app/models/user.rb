@@ -13,10 +13,11 @@ class User < ApplicationRecord
   # def login
   #   @login || self.username || self.email
   # end
-  
+
   # validates :username, presence: :true, uniqueness: { case_sensitive: false }
 
-  has_many :wikis
+  has_many :collaborators
+  has_many :wikis, through: :collaborators
 
   after_initialize :set_default_role, :if => :new_record?
   enum role: [:standard, :premium, :admin]
