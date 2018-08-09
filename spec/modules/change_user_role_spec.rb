@@ -34,12 +34,13 @@ RSpec.describe ChangeUserRole, type: :helper do
       before { private_wiki.update(user_id: premium_user.id) }
 
       it "sets the user's private wikis to public" do
-        pp premium_user
-        pp private_wiki
+        # pp premium_user
+        # pp private_wiki
         downgrade_user(premium_user)
-        pp premium_user
-        pp private_wiki
-        expect(private_wiki.private).to eq false
+        # pp premium_user
+        # pp private_wiki
+        expect(premium_user.wikis[0].private).to eq false
+        # expect(private_wiki.private).to eq false
       end
     end
   end
