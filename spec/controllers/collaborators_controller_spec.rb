@@ -25,21 +25,91 @@ require 'rails_helper'
 
 RSpec.describe CollaboratorsController, type: :controller do
 
+  let(:private_wiki) { create (:private_wiki) }
+  let(:user) { create(:user) }
+  let(:premium_user) { create(:premium_user) }
+  let(:collaborator) { create(:collaborator) }
+
+
+
+  context "anonymous user" do
+
+    before :each do
+      login_with nil
+    end
+
+    describe "POST #create" do
+      it "should be redirected to signin" do
+        post :create
+        expect( response ).to redirect_to( new_user_session_path )
+      end
+    end
+  end
+
+
+
+
+  context "premium user" do
+
+    before :each do
+      login_with premium_user
+    end
+
+    describe "POST #create" do
+      it "increases the number of Collaborator by 1" do
+        expect{ post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: premium_user.id } } }.to change(Collaborator,:count).by(1)
+      end
+
+      it "assigns the new collaborator to @collaborator" do
+        post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: premium_user.id } }
+        expect(assigns(:collaborator)).to eq Collaborator.last
+      end
+
+      it "redirects to the wiki" do
+        post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: premium_user.id } }
+        expect(response).to redirect_to private_wiki
+      end
+    end
+
+    describe "DELETE #destroy" do
+      it "deletes the collaborator" do
+        delete :destroy, params: { wiki_id: private_wiki.id, id: collaborator.id }
+        count = Collaborator.where({id: collaborator.id}).size
+        expect(count).to eq 0
+      end
+
+      it "redirects to wikis index" do
+        delete :destroy, params: { wiki_id: private_wiki.id, id: collaborator.id }
+        expect(response).to redirect_to private_wiki
+      end
+    end
+  end
+
+
+
+
+
+
+
+
   # This should return the minimal set of attributes required to create a valid
   # Collaborator. As you add validations to Collaborator, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
-
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
+  # let(:my_wiki) { create (:wiki) }
+  # let(:user) { create(:user) }
+  #
+  # let(:valid_attributes) {
+  #   { user_id: user.id, wiki_id: my_wiki.id }
+  # }
+  #
+  # let(:invalid_attributes) {
+  #   skip("Add a hash of attributes invalid for your model")
+  # }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # CollaboratorsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  # let(:valid_session) { {} }
 
   # describe "GET #index" do
   #   it "returns a success response" do
@@ -72,27 +142,27 @@ RSpec.describe CollaboratorsController, type: :controller do
   #   end
   # end
 
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Collaborator" do
-        expect {
-          post :create, params: {collaborator: valid_attributes}, session: valid_session
-        }.to change(Collaborator, :count).by(1)
-      end
-
-      it "redirects to the created collaborator" do
-        post :create, params: {collaborator: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Collaborator.last)
-      end
-    end
-
-    context "with invalid params" do
-      it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: {collaborator: invalid_attributes}, session: valid_session
-        expect(response).to be_success
-      end
-    end
-  end
+  # describe "POST #create" do
+  #   context "with valid params" do
+  #     it "creates a new Collaborator" do
+  #       expect {
+  #         post :create, params: {collaborator: valid_attributes}, session: valid_session
+  #       }.to change(Collaborator, :count).by(1)
+  #     end
+  #
+  #     it "redirects to the created collaborator" do
+  #       post :create, params: {collaborator: valid_attributes}, session: valid_session
+  #       expect(response).to redirect_to(Collaborator.last)
+  #     end
+  #   end
+  #
+  #   context "with invalid params" do
+  #     it "returns a success response (i.e. to display the 'new' template)" do
+  #       post :create, params: {collaborator: invalid_attributes}, session: valid_session
+  #       expect(response).to be_success
+  #     end
+  #   end
+  # end
 
   # describe "PUT #update" do
   #   context "with valid params" do
@@ -123,19 +193,18 @@ RSpec.describe CollaboratorsController, type: :controller do
   #   end
   # end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested collaborator" do
-      collaborator = Collaborator.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: collaborator.to_param}, session: valid_session
-      }.to change(Collaborator, :count).by(-1)
-    end
-
-    it "redirects to the collaborators list" do
-      collaborator = Collaborator.create! valid_attributes
-      delete :destroy, params: {id: collaborator.to_param}, session: valid_session
-      expect(response).to redirect_to(collaborators_url)
-    end
-  end
-
+#   describe "DELETE #destroy" do
+#     it "destroys the requested collaborator" do
+#       collaborator = Collaborator.create! valid_attributes
+#       expect {
+#         delete :destroy, params: {id: collaborator.to_param}, session: valid_session
+#       }.to change(Collaborator, :count).by(-1)
+#     end
+#
+#     it "redirects to the collaborators list" do
+#       collaborator = Collaborator.create! valid_attributes
+#       delete :destroy, params: {id: collaborator.to_param}, session: valid_session
+#       expect(response).to redirect_to(collaborators_url)
+#     end
+#   end
 end

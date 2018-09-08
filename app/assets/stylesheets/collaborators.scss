@@ -1,0 +1,33 @@
+// Place all the styles related to the Collaborators controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+// #collaborators {
+//   text-align: center;
+//   text-decoration: underline;
+//   margin-bottom: 2.5rem;
+//   font-size: 1.75rem;
+// }
+
+// #add-collaborators {
+//   text-align: center;
+//   text-decoration: underline;
+//   margin-bottom: 2.5rem;
+//   font-size: 1.75rem;
+// }
+
+.collab-list {
+  padding-left: 0;
+}
+
+.collab-list li {
+  list-style: none;
+  // font-size: 1.55rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid lightgray;
+}
+
+#delete {
+  margin-top: 0;
+}
