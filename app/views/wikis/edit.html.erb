@@ -17,7 +17,7 @@
   <% if @wiki.private? && (current_user.role == "premium" || "admin")  %>
     <div class="col-md-4">
       <%= render partial: 'collaborators/list' %>
-      <%= render partial: 'collaborators/form', locals: { wiki: @wiki } %>
+      <%= render partial: 'collaborators/form', locals: { wiki: @wiki, collaborator: @collaborator } %>
     </div>
   <% end %>
 </div>

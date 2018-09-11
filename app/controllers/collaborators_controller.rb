@@ -40,11 +40,14 @@ class CollaboratorsController < ApplicationController
   def create
     @wiki = Wiki.find(params[:wiki_id])
     current_collaborators = @wiki.users
-    @user = User.find_by(email: params[:collaborator][:user])
-
-    if User.exists?(@user.id)
+    # @user = User.find_by(email: params[:collaborator][:user])
+    @user = User.where('email LIKE ?', "%#{params[:search]}%").first
+          # .all_except(current_user)
+          # .exclude_collaborators(@wiki)
+          # .first
+    if @user
       if current_collaborators.include?(@user) || @user == current_user
-        flash[:error] = "User is already a collaborator."
+        flash[:alert] = "User is already a collaborator."
         redirect_to @wiki
       else
         @collaborator = @wiki.collaborators.new(wiki_id: @wiki.id, user_id: @user.id)
@@ -57,7 +60,7 @@ class CollaboratorsController < ApplicationController
         redirect_to @wiki
       end
     else
-      flash[:error] = "Sorry, no such user exists. "
+      flash[:alert] = "Sorry, no such user exists. "
       redirect_to @wiki
     end
   end

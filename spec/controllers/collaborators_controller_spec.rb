@@ -26,7 +26,7 @@ require 'rails_helper'
 RSpec.describe CollaboratorsController, type: :controller do
 
   let(:private_wiki) { create (:private_wiki) }
-  let(:user) { create(:user) }
+  let(:user) { create(:user, email: "standfirst@example.com") }
   let(:premium_user) { create(:premium_user) }
   let(:collaborator) { create(:collaborator) }
 
@@ -40,7 +40,7 @@ RSpec.describe CollaboratorsController, type: :controller do
 
     describe "POST #create" do
       it "should be redirected to signin" do
-        post :create
+        post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: premium_user.id } }
         expect( response ).to redirect_to( new_user_session_path )
       end
     end
@@ -55,18 +55,24 @@ RSpec.describe CollaboratorsController, type: :controller do
       login_with premium_user
     end
 
+
     describe "POST #create" do
       it "increases the number of Collaborator by 1" do
-        expect{ post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: premium_user.id } } }.to change(Collaborator,:count).by(1)
+        expect{ post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, search: "standfirst" } } }.to change(Collaborator,:count).by(1)
       end
 
+    # describe "POST #create" do
+    #   it "increases the number of Collaborator by 1" do
+    #     expect{ post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: user.id } } }.to change(Collaborator,:count).by(1)
+    #   end
+
       it "assigns the new collaborator to @collaborator" do
-        post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: premium_user.id } }
+        post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: user.id } }
         expect(assigns(:collaborator)).to eq Collaborator.last
       end
 
       it "redirects to the wiki" do
-        post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: premium_user.id } }
+        post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: user.id } }
         expect(response).to redirect_to private_wiki
       end
     end
