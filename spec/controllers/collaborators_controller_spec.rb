@@ -56,15 +56,15 @@ RSpec.describe CollaboratorsController, type: :controller do
     end
 
 
-    describe "POST #create" do
-      it "increases the number of Collaborator by 1" do
-        expect{ post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, search: "standfirst" } } }.to change(Collaborator,:count).by(1)
-      end
-
     # describe "POST #create" do
     #   it "increases the number of Collaborator by 1" do
-    #     expect{ post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: user.id } } }.to change(Collaborator,:count).by(1)
+    #     expect{ post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, search: "standfirst" } } }.to change(Collaborator,:count).by(1)
     #   end
+
+    describe "POST #create" do
+      it "increases the number of Collaborator by 1" do
+        expect{ post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: user.id } } }.to change(Collaborator,:count).by(1)
+      end
 
       it "assigns the new collaborator to @collaborator" do
         post :create, params: { wiki_id: private_wiki.id, collaborator: { wiki_id: private_wiki.id, user_id: user.id } }
